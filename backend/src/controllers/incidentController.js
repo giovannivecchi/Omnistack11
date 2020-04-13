@@ -2,8 +2,27 @@ const connection = require("../database/connection");
 
 module.exports = {
   async index(req, res) {
-    const incidents = await connection("incidents").select("*");
+    // page = 1 default value 1
+    const { page = 1 } = req.query;
+
+    const [count] = await connection("incidents").count();
+
+    const incidents = await connection("incidents")
+      .join("ongs", "ongs.id", "=", "incidents.ong_id")
+      .limit(5)
+      .offset((page - 1) * 5)
+      .select([
+        "incidents.*",
+        "ongs.name",
+        "ongs.email",
+        "ongs.city",
+        "ongs.uf",
+      ]);
+
+    //retorna no header o total de paginas [count] retorna o value = 'count(*)'
+    res.header("X-Total-Count", count["count(*)"]);
     return res.json({ incidents });
+    // offset  ele vai pular 5 registros por pagina, menos a primeira pagina
   },
 
   async create(req, res) {

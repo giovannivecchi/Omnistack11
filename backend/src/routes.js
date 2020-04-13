@@ -8,13 +8,9 @@ const sessionController = require("./controllers/sessionController");
 
 routes.get("/ongs", ongController.index);
 routes.post("/ongs", ongController.create);
-
 routes.post("/incidents", IncidentController.create);
 routes.get("/incidents", IncidentController.index);
-
 routes.delete("/incidents/:id", IncidentController.delete);
-
 routes.get("/profile", profileController.index);
-
 routes.post('/session', sessionController.create)
 module.exports = routes;
